@@ -1,0 +1,72 @@
+<html>
+<body>
+
+<h1>Tempo:</h1><input id='tempo'></input>
+<br>
+<h1>Pessoas:</h1><input id='pessoas'></input>
+
+<button onClick='calcular();'>Calcular</button>
+</br></br></br>
+<textarea id="resultado" rows="10" cols="50"></textarea>
+
+
+<script>
+function pad(num) {
+    var s = "0" + num;
+    return s.substr(s.length-2);
+}
+
+function formatar_tempo(t)
+{
+    var h = Math.floor(t / 3600)
+    h = pad(h)
+    
+    var m = Math.floor(t / 60) % 60
+    m = pad(m)
+
+    var s = Math.floor(t) % 60
+    s = pad(s)
+
+    return h + ":" + m + ":" + s
+}
+
+function calcular()
+{
+	var tempo = document.getElementById("tempo").value;
+	var pessoas = document.getElementById("pessoas").value;
+	
+	var tempos =  tempo.split(':').reverse()
+
+	var segundos = tempos[0]
+	var minutos = tempos[1]
+
+	if(tempos.length == 3)
+	{
+	    var horas = tempos[2]
+	}
+
+	var tempo_segundos = parseInt(segundos)
+
+	tempo_segundos += parseInt(minutos) * 60
+
+	if (horas)
+	{
+  	  tempo_segundos += parseInt(horas) * 3600
+	}
+
+	var tempo_individual = tempo_segundos / pessoas
+	
+	var texto = "";
+	for (i=0; i<pessoas; i++)
+	{
+	    var t1 = formatar_tempo(tempo_individual * i)
+	    var t2 = formatar_tempo(tempo_individual * (i+1))
+    
+	    texto += (t1 + " ~ " + t2 + "\n")
+	}
+
+	document.getElementById("resultado").value = texto;
+}
+</script>
+</body>
+</html>
