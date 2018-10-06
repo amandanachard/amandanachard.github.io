@@ -1,7 +1,9 @@
 <html>
 <body>
 
-<h1>Tempo:</h1><input id='tempo'></input>
+<h2>Início da Aula:</h2><input id='inicio' value='0:00'></input>
+
+<h1>Tempo Total:</h1><input id='tempo' placeholder='hh:mm:ss'></input>
 <br>
 <h1>Pessoas:</h1><input id='pessoas'></input>
 
@@ -30,42 +32,64 @@ function formatar_tempo(t)
     return h + ":" + m + ":" + s
 }
 
-function calcular()
+function converter_tempoHMS_segundos(tempoHMS)
 {
-	var tempo = document.getElementById("tempo").value;
-	var pessoas = document.getElementById("pessoas").value;
-	
-	var tempos =  tempo.split(':').reverse()
+	var hms = tempoHMS.split(':').reverse()
 
-	var segundos = tempos[0]
-	var minutos = tempos[1]
+	var segundos = hms[0]
+	var minutos = hms[1]
 
-	if(tempos.length == 3)
+	if(hms.length == 3)
 	{
-	    var horas = tempos[2]
+	    var horas = hms[2]
 	}
 
 	var tempo_segundos = parseInt(segundos)
-
-	tempo_segundos += parseInt(minutos) * 60
+	
+	if(minutos)
+	{
+	  tempo_segundos += parseInt(minutos) * 60
+	}
 
 	if (horas)
 	{
   	  tempo_segundos += parseInt(horas) * 3600
 	}
+	
+	return tempo_segundos;
+}
+
+function calcular()
+{
+	var tempo = document.getElementById("tempo").value;
+	var pessoas = document.getElementById("pessoas").value;
+
+	var inicio_util = document.getElementById("inicio").value;
+	var inicio_util_segundos = converter_tempoHMS_segundos(inicio_util);
+	
+	tempo_segundos = converter_tempoHMS_segundos(tempo);
 
 	var tempo_individual = tempo_segundos / pessoas
 	
 	var texto = "";
 	for (i=0; i<pessoas; i++)
 	{
-	    var t1 = formatar_tempo(tempo_individual * i)
-	    var t2 = formatar_tempo(tempo_individual * (i+1))
+	    var t1 = formatar_tempo(tempo_individual * i + inicio_util_segundos)
+	    var t2 = formatar_tempo(tempo_individual * (i+1) + inicio_util_segundos)
     
 	    texto += (t1 + " ~ " + t2 + "\n")
 	}
 
 	document.getElementById("resultado").value = texto;
+}
+
+var labels = document.querySelectorAll("label");
+var i = labels.length;
+while (i--) {
+  var label = labels.item(i);
+  var text = label.textContent;
+  label.parentNode.classList.contains("required") && (text += "*");
+  label.nextElementSibling.setAttribute("placeholder", text);
 }
 </script>
 </body>
