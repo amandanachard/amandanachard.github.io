@@ -34,6 +34,8 @@ function formatar_tempo(t)
 
 function converter_tempoHMS_segundos(tempoHMS)
 {
+	if(!tempoHMS)
+          return 0;
 	var hms = tempoHMS.split(':').reverse()
 
 	var segundos = hms[0]
@@ -69,7 +71,7 @@ function calcular()
 	
 	tempo_segundos = converter_tempoHMS_segundos(tempo);
 
-	var tempo_individual = tempo_segundos / pessoas
+	var tempo_individual = (tempo_segundos - inicio_util_segundos) / pessoas
 	
 	var texto = "";
 	for (i=0; i<pessoas; i++)
